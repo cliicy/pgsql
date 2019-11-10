@@ -9,6 +9,12 @@ source ${cfg_file}
 sudo umount /dev/nvme0n1
 sudo nvme format /dev/nvme0n1
 sudo mkfs -t ${fs_type} -f /dev/nvme0n1
+
+if [ "${mnt_point_data}bk" != "" ] && [ ! -e ${mnt_point_data}bk ];
+then
+        sudo mkdir -p ${mnt_point_data}bk;
+fi
+
 sudo mount /dev/nvme0n1 ${mnt_opt} ${mnt_point_data}bk
 sudo chown -R `whoami`:`whoami` ${mnt_point_data}bk
 cp -r ${mnt_point_data}/* ${mnt_point_data}bk/
