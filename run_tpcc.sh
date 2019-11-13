@@ -116,7 +116,7 @@ ssd_name=$(basename "$PWD")
 #ffactor=`echo -e "\d+ pg_trigger" | ${cmd_psql} ${dbname} | grep fillfactor | cut -d ':' -f2 | cut -d '=' -f2`
 #ffactor=`echo -e "\d+ pgbench_accounts" | ${cmd_psql} ${dbname} | grep fillfactor | cut -d ':' -f2 | cut -d '=' -f2`
 #gen_benchinfo_postgres ${ssd_name} ${scale} ${output_dir} ${ffactor}
-ffactor=`echo -e "\d+ ${tpcc_tbname}" | ${cmd_psql} ${dbname} | grep fillfactor | cut -d ':' -f2 | cut -d '=' -f2`
+ffactor=`echo -e "\d+ ${tpcc_tbname}" | ${cmd_psql} ${dbname} | grep "Options: fillfactor" | cut -d ':' -f2 | cut -d '=' -f2`
 gen_benchinfo_postgres ${ssd_name} ${tpcc_table_count}.${tpcc_scale_size} ${output_dir} ${ffactor}
 #echo "${ssd_name} ${table_count}.${table_size} ${output_dir} ${ffactor}" >> ${output_dir}/ben.info
 
