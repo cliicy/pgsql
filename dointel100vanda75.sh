@@ -1,8 +1,6 @@
 #!/bin/bash
 
 
-sh dointel_fulldisk.sh
-
 sed -i s/fillfact=100/fillfact=75/ ./sysbench-cfg/benchmark.cfg
 ./fulldisk_precond_1_prep_dev.sh ./sysbench-cfg/benchmark.cfg 
 
