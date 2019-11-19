@@ -78,7 +78,7 @@ for workload in ${workload_set};
 
         if [ "${cmd}" == "run" ];
         then
-                start_blk_trace ${output_dir} ${workload_fname} ${disk} 120 &
+                #start_blk_trace ${output_dir} ${workload_fname} ${disk} 120 &
                 ps -ef | grep blktrace | grep -v grep | awk '{print $2}' | xargs kill -15
         fi
 
