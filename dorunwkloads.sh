@@ -5,6 +5,22 @@ if [ "$1" = "" ]; then echo -e "Usage:\n\t2_initdb.sh cfg_file"; exit 1; fi
 if [ ! -e ${cfg_file} ]; then echo "can't find configuration file [${cfg_file}]", exit 2; fi
 source ${cfg_file}
 
+if [ "${cp_data}" == "1" ]; then
+# cleanup Intel/Micron to save Vanda-data-after-Vacuumed-loaded
+sudo umount /dev/nvme0n1
+sudo nvme format /dev/nvme0n1
+sudo mkfs -t ${fs_type} -f /dev/nvme0n1
+
+if [ "${mnt_point_data}bk" != "" ] && [ ! -e ${mnt_point_data}bk ];
+then
+        sudo mkdir -p ${mnt_point_data}bk;
+fi
+
+sudo mount /dev/nvme0n1 ${mnt_opt} ${mnt_point_data}bk
+sudo chown -R `whoami`:`whoami` ${mnt_point_data}bk
+cp -r ${mnt_point_data}/* ${mnt_point_data}bk/
+echo "done copy ${mnt_point_data}'s prepared data to nvme to backup"
+fi
 
 source ./output.dir
 runningwl=prepare

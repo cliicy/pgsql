@@ -18,9 +18,9 @@ if [ ! -e ${mnt_point_data} ]; then sudo mkdir -p ${mnt_point_data}; fi
 
 sudo umount ${disk}
 
-pushd ${css_util_dir}
-sudo ${initcard}
-popd
+#pushd ${css_util_dir}
+#sudo ${initcard}
+#popd
 
 sleep 10
 

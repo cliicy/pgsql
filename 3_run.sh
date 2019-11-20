@@ -44,8 +44,8 @@ for workload in ${workload_set};
         if [ "prepare" == "${workload}" ]; then cmd="prepare"; workload="oltp_common"; workload_fname="prepare"; fi
         echo -e "sfx_message starts at: " `date +%Y-%m-%d\ %H:%M:%S` "\n"  > ${output_dir}/${workload_fname}.sfx_message
         sudo chmod 666 /var/log/sfx_messages;
-	#tail -f -n 0 /var/log/sfx_messages >> ${output_dir}/${workload_fname}.sfx_message &
-        #echo $! > ${output_dir}/tail.${workload_fname}.pid
+	tail -f -n 0 /var/log/sfx_messages >> ${output_dir}/${workload_fname}.sfx_message &
+        echo $! > ${output_dir}/tail.${workload_fname}.pid
         echo "iostat start at: " `date +%Y-%m-%d\ %H:%M:%S` > ${output_dir}/${workload_fname}.iostat
         tail -f -n 0 ${app_dbglog} > ${output_dir}/${workload_fname}.${app}.log &
         echo $! > ${output_dir}/tail.${workload_fname}.${app}.log.pid
@@ -123,6 +123,9 @@ for workload in ${workload_set};
         fi
         # manaully run vacuum to clean up the garbages end 
 
+        du --block-size=1G ${app_datadir} > ${output_dir}/${workload_fname}.dbsize2
+        cat /sys/block/${dev_name}/sfx_smart_features/sfx_capacity_stat >> ${output_dir}/${workload_fname}.dbsize2
+`
         echo -e "select pg_database_size('${dbname}')/1024/1024/1024||'G'
 " | ${cmd_psql} ${dbname} > ${output_dir}/${workload_fname}.pgdbsz
         echo -e "select pg_indexes_size('${tbname}')/1024/1024/1024||'G'
