@@ -125,7 +125,7 @@ for workload in ${workload_set};
 
         du --block-size=1G ${app_datadir} > ${output_dir}/${workload_fname}.dbsize2
         cat /sys/block/${dev_name}/sfx_smart_features/sfx_capacity_stat >> ${output_dir}/${workload_fname}.dbsize2
-`
+
         echo -e "select pg_database_size('${dbname}')/1024/1024/1024||'G'
 " | ${cmd_psql} ${dbname} > ${output_dir}/${workload_fname}.pgdbsz
         echo -e "select pg_indexes_size('${tbname}')/1024/1024/1024||'G'
@@ -136,8 +136,6 @@ generate_csv ${output_dir}
 get_dbsize_new ${output_dir}
 
 ssd_name=$(basename "$PWD")
-#ffactor=`echo -e "\d+ pg_trigger" | ${cmd_psql} ${dbname} | grep fillfactor | cut -d ':' -f2 | cut -d '=' -f2`
-#ffactor=`echo -e "\d+ pgbench_accounts" | ${cmd_psql} ${dbname} | grep fillfactor | cut -d ':' -f2 | cut -d '=' -f2`
 #gen_benchinfo_postgres ${ssd_name} ${scale} ${output_dir} ${ffactor}
 ffactor=`echo -e "\d+ ${tbname}" | ${cmd_psql} ${dbname} | grep "Options: fillfactor" | cut -d ':' -f2 | cut -d '=' -f2`
 #gen_benchinfo_postgres ${ssd_name} ${table_count}.${table_size} ${output_dir} ${ffactor}
