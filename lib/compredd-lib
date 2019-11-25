@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function pigzt() {
+    for f in `ls *.result`;
+    do
+        grep -e "com.yahoo.ycsb" -m 1 $f
+        if [ $? -eq 0 ]; then extract_ycsb_result $f; continue; fi
+
+        grep -e "sysbench" -m 1 $f
+        if [ $? -eq 0 ]; then extract_sysbench_result $f; continue; fi
+    done
+}
