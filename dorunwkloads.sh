@@ -7,24 +7,25 @@ source ${cfg_file}
 
 if [ "${cp_data}" == "1" ]; then
 # cleanup Intel/Micron to save Vanda-data-after-Vacuumed-loaded
-sudo umount /dev/nvme0n1
-sudo nvme format /dev/nvme0n1
-sudo mkfs -t ${fs_type} -f /dev/nvme0n1
+#sudo umount /dev/nvme0n1
+#sudo nvme format /dev/nvme0n1
+#sudo mkfs -t ${fs_type} -f /dev/nvme0n1
 
-if [ "${mnt_point_data}bk" != "" ] && [ ! -e ${mnt_point_data}bk ];
-then
-        sudo mkdir -p ${mnt_point_data}bk;
-fi
+#if [ "${mnt_point_data}bk" != "" ] && [ ! -e ${mnt_point_data}bk ];
+#then
+#        sudo mkdir -p ${mnt_point_data}bk;
+#fi
 
-sudo mount /dev/nvme0n1 ${mnt_opt} ${mnt_point_data}bk
-sudo chown -R `whoami`:`whoami` ${mnt_point_data}bk
-cp -r ${mnt_point_data}/* ${mnt_point_data}bk/
+#sudo mount /dev/nvme0n1 ${mnt_opt} ${mnt_point_data}bk
+#sudo chown -R `whoami`:`whoami` ${mnt_point_data}bk
+#cp -r ${mnt_point_data}/* ${mnt_point_data}bk/
 echo "done copy ${mnt_point_data}'s prepared data to nvme to backup"
 fi
 
 source ./output.dir
-runningwl=prepare
-echo "rworkload_set=${rworkload_set}" >> ${output_dir}/postgresql.opts
+wllast=`echo ${workload_set} | awk '{print $NF}'`
+runningwl=oltp_point_select
+echo "workload_set=${wllast} rworkload_set=${rworkload_set}" >> ${output_dir}/wl.opts
 
 lastwl=`echo ${rworkload_set} | awk '{print $NF}'`
 for workload in ${rworkload_set};
