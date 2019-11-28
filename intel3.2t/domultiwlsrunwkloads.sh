@@ -17,12 +17,17 @@ fi
 
 sudo mount /dev/sfdv0n1 ${mnt_opt} ${mnt_point_data}bk
 sudo chown -R `whoami`:`whoami` ${mnt_point_data}bk
-cp -r ${mnt_point_data}/* ${mnt_point_data}bk/
+bkdataset=${mnt_point_data}bk/${app_version}.tar.lz4
+#cp -r ${mnt_point_data}/* ${mnt_point_data}bk/
+pushd ${mnt_point_data}
+tar -jcvf ${bkdataset} ./*
+popd
 echo "done copy ${mnt_point_data}'s prepared data to nvme to backup"
 
 source ./output.dir
-runningwl=prepare
-echo "rworkload_set=${rworkload_set}" >> ${output_dir}/postgresql.opts
+wllast=`echo ${workload_set} | awk '{print $NF}'`
+runningwl=${wllast}
+echo "workload_set=${wllast} rworkload_set=${rworkload_set}" >> ${output_dir}/wl.opts
 
 lastwl=`echo ${rworkload_set} | awk '{print $NF}'`
 for workload in ${rworkload_set};
@@ -41,7 +46,8 @@ do
             sudo mkdir -p ${app_datadir};
         fi
         sudo chown -R `whoami`:`whoami` ${app_datadir}
-        cp -r ${mnt_point_data}bk/* ${mnt_point_data}
+        #cp -r ${mnt_point_data}bk/* ${mnt_point_data}
+        tar -jxvf ${bkdataset} -C ${mnt_point_data}
         echo "do ${workload} and will start postgreSQL server " >${app_dbglog}
         chmod -R 0700 ${app_datadir}
         ./start.sh ${cfg_file}
