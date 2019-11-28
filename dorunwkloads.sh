@@ -28,7 +28,7 @@ fi
 
 source ./output.dir
 wllast=`echo ${workload_set} | awk '{print $NF}'`
-runningwl=oltp_point_select
+runningwl=${wllast}
 echo "workload_set=${wllast} rworkload_set=${rworkload_set}" >> ${output_dir}/wl.opts
 
 lastwl=`echo ${rworkload_set} | awk '{print $NF}'`
@@ -48,7 +48,7 @@ do
             sudo mkdir -p ${app_datadir};
         fi
         sudo chown -R `whoami`:`whoami` ${app_datadir}
-#        cp -r ${mnt_point_data}bk/* ${mnt_point_data}
+        #cp -r ${mnt_point_data}bk/* ${mnt_point_data}
         tar -jxvf ${bkdataset} -C ${mnt_point_data}
         echo "do ${workload} and will start postgreSQL server " >${app_dbglog}
         chmod -R 0700 ${app_datadir}
