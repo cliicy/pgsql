@@ -23,10 +23,10 @@ if [ "${tarlz4_bak}" == "1" ];
 then
     bkdataset=${mnt_point_data}bk/${app_version}.tar.lz4
     pushd ${mnt_point_data}
-    time tar -jcvf ${bkdataset} ./* >${output_dir}/tar.log
+    (time tar -jcvf ${bkdataset} ./*) 2>&1 | tee -a ${output_dir}/tar.log
     popd
 elif [ "${tarlz4_bak}" == "0" ]; then
-    time cp -r ${mnt_point_data}/* ${mnt_point_data}bk/ > ${output_dir}/cp.log
+    (time cp -r ${mnt_point_data}/* ${mnt_point_data}bk/) 2>&1 | tee -a ${output_dir}/cp.log
 fi
 
 echo "done copy ${mnt_point_data}'s prepared data to nvme to backup"
@@ -54,9 +54,9 @@ do
         fi
         sudo chown -R `whoami`:`whoami` ${app_datadir}
         if [ "${tarlz4_bak}" == "1" ]; then
-            time tar -jxvf ${bkdataset} -C ${mnt_point_data} >>${output_dir}/tar.log
+            (time tar -jxvf ${bkdataset} -C ${mnt_point_data}) 2>&1 | tee -a ${output_dir}/tar.log
         elif [ "${tarlz4_bak}" == "0" ]; then
-            time cp -r ${mnt_point_data}bk/* ${mnt_point_data} >>${output_dir}/cp.log
+            (time cp -r ${mnt_point_data}bk/* ${mnt_point_data}) 2>&1 | tee -a ${output_dir}/cp.log
         fi
         echo "do ${workload} and will start postgreSQL server " >${app_dbglog}
         chmod -R 0700 ${app_datadir}
